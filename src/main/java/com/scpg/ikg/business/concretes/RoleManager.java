@@ -2,9 +2,9 @@ package com.scpg.ikg.business.concretes;
 
 import com.scpg.ikg.business.abstracts.IRoleService;
 import com.scpg.ikg.business.tools.Messages;
+import com.scpg.ikg.core.entities.Role;
 import com.scpg.ikg.core.utilities.business.BusinessRule;
 import com.scpg.ikg.core.utilities.results.*;
-import com.scpg.ikg.core.entities.Role;
 import com.scpg.ikg.repo.abstracts.IRoleDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class RoleManager implements IRoleService {
     @Override
     public DataResult<Role> findByName(String roleName) {
         var result = iRoleDao.findByName(roleName);
-        if (result==null)
+        if (result == null)
             return new ErrorDataResult<>(Messages.roleNotFound);
         return new SuccesDataResult<>(result);
     }
@@ -30,6 +30,21 @@ public class RoleManager implements IRoleService {
     @Override
     public IResult existByRoleId(int id) {
         return null;
+    }
+
+    @Override
+    public DataResult<Role> getAllByUser(String username) {
+
+        return new SuccesDataResult<>(iRoleDao.getAllByUsers_Username(username));
+    }
+
+    public IResult isAdmin(String username) {
+        var result = iRoleDao.getAllByUsers_Username(username);
+        for (var role : result) {
+            if (role.getName().equals("admin"))
+                return new SuccessResult();
+        }
+        return new ErrorResult();
     }
 
     @Override
@@ -60,8 +75,9 @@ public class RoleManager implements IRoleService {
 
     @Override
     public DataResult<Role> getById(Integer id) {
-        return new SuccesDataResult<>(iRoleDao.getById(id),Messages.roleListed);
+        return new SuccesDataResult<>(iRoleDao.getById(id), Messages.roleListed);
     }
+
     private IResult ifExistByRoleName(String roleName) {
         if (iRoleDao.existsByName(roleName))
             return new ErrorResult(Messages.roleNameAlreadyExist);

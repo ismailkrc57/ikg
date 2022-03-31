@@ -148,6 +148,7 @@ public class UserManager implements IUserService, UserDetailsService {
     }
 
 
+
     private IResult ifAlreadyExistByUsername(String username) {
         if (iUserDao.existsByUsername(username))
             return new ErrorResult(Messages.usernameAlreadyInUse);

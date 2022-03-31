@@ -9,4 +9,8 @@ public interface IRoleService extends IServiceBase<Role> {
     DataResult<Role> findByName(String roleName);
 
     IResult existByRoleId(int id);
+
+    DataResult<Role> getAllByUser(String username);
+
+    IResult isAdmin(String username);
 }
